@@ -2,11 +2,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import sqlite3
 
-# Conexão com o banco de dados
 con = sqlite3.connect("pessoas.db")
 cur = con.cursor()
 
-# Criação (ou atualização) da tabela com os novos campos
 cur.execute("""
 CREATE TABLE IF NOT EXISTS pessoas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,7 +17,6 @@ con.commit()
 
 registro_atual_id = None
 
-# ---------- Funções ----------
 def atualizar_grade():
     tabela.delete(*tabela.get_children())
     cur.execute("SELECT id, nome, cep, endereco FROM pessoas ORDER BY id DESC")
@@ -125,7 +122,6 @@ def atualizar_botoes():
     em_edicao = registro_atual_id is not None or texto != ""
     btn_cancelar.config(state=tk.NORMAL if em_edicao else tk.DISABLED)
 
-# ---------- Interface ----------
 janela = tk.Tk()
 janela.title("Cadastro de Pessoas - CRUD (com CEP e Endereço)")
 janela.geometry("700x450")
@@ -133,7 +129,6 @@ janela.geometry("700x450")
 frm_form = tk.Frame(janela)
 frm_form.pack(fill="x", padx=10, pady=8)
 
-# Campos de entrada
 tk.Label(frm_form, text="Nome:").grid(row=0, column=0, sticky="w", padx=(0,8))
 entrada_nome = tk.Entry(frm_form, width=40)
 entrada_nome.grid(row=0, column=1, sticky="w")
@@ -150,7 +145,6 @@ entrada_nome.bind("<KeyRelease>", lambda e: atualizar_botoes())
 entrada_cep.bind("<KeyRelease>", lambda e: atualizar_botoes())
 entrada_endereco.bind("<KeyRelease>", lambda e: atualizar_botoes())
 
-# Botões
 frm_btns = tk.Frame(janela)
 frm_btns.pack(fill="x", padx=10, pady=(2,8))
 
@@ -168,7 +162,6 @@ btn_excluir.grid(row=0, column=3, padx=4, pady=2)
 btn_cancelar.grid(row=0, column=4, padx=4, pady=2)
 btn_fechar.grid(row=0, column=5, padx=4, pady=2)
 
-# Tabela
 frm_tab = tk.Frame(janela)
 frm_tab.pack(fill="both", expand=True, padx=10, pady=4)
 
@@ -195,9 +188,9 @@ frm_tab.columnconfigure(0, weight=1)
 tabela.bind("<<TreeviewSelect>>", ao_selecionar)
 tabela.bind("<Double-1>", carregar_selecionado_no_campo)
 
-# Inicialização
 novo()
 atualizar_grade()
 
 janela.mainloop()
 con.close()
+
